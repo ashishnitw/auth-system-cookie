@@ -28,7 +28,7 @@ const register = async (req, res) => {
     return res.json({ ok: true });
   } catch (err) {
     console.log(err);
-    return res.status(400).send("Error. Try again.");
+    return res.status(400).send('Error. Try again.');
   }
 };
 
@@ -65,7 +65,17 @@ const login = async (req, res) => {
   }
 };
 
+const logout = async (req, res) => {
+  try {
+    res.clearCookie('token');
+    return res.json({ message: 'Logout success' });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   register,
-  login
+  login,
+  logout
 }
