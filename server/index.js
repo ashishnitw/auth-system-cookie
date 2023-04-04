@@ -2,11 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { readdirSync } = require('fs');
+const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const csrf = require('csurf');
 require('dotenv').config();
 
-
-console.log('Initializing server');
+const csrfProtection = csrf({ cookie: true });
 
 // Create express app
 const app = express();
@@ -18,6 +19,7 @@ mongoose.connect(process.env.MONGO_URI).then(() => console.log('Connected to Mon
 // Apply middlewares
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan("dev"));
 // Middleware is always a function
 // app.use((req, res, next) => {
@@ -28,6 +30,14 @@ app.use(morgan("dev"));
 // Routes
 readdirSync('./routes').map((r) => app.use('/api', require(`./routes/${r}`)));
 
+// csrf
+app.use(csrfProtection);
+
+app.get("/api/csrf-token", (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
+// port
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => { console.log(`Server started at localhost:${PORT}`) });

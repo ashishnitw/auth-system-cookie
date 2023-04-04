@@ -13,7 +13,7 @@ import { Context } from "../context";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-const { Item, SubMenu } = Menu;
+const { Item, ItemGroup, SubMenu } = Menu;
 
 const TopNav = () => {
   const [current, setCurrent] = useState('');
@@ -70,9 +70,14 @@ const TopNav = () => {
           title={user && user.name}
           className="float-right"
         >
-          <Item onClick={logout} className="float-right">
-            Logout
-          </Item>
+          <ItemGroup>
+            <Item key="/user">
+              <Link href="/user">
+                Dashboard
+              </Link>
+            </Item>
+            <Item onClick={logout}>Logout</Item>
+          </ItemGroup>
         </SubMenu>
       )}
 
